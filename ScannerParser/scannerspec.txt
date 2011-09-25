@@ -39,12 +39,20 @@ gt = ">".
 lte = "<=".
 gte = ">=".
 ne = "!=".
-eq = "==".
+eq = "=".
+ee = "==".
 plus = "+".
 minus = "-".
 times = "*".
 divide = "/".
 not = "!".
+scolon = ";".
+comma = ",".
+dot = ".".
+lbrace = "{".
+rbrace = "}".
+lparent = "(".
+rparent = ")".
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO '\n'
@@ -52,13 +60,13 @@ COMMENTS FROM "//" TO '\n'
 IGNORE '\r' + '\n' + '\t'
 
 PRODUCTIONS
-moyaFTW = class id [extends id] BodyClass.
-BodyClass = '{' [Vars] {Metodo} [Main] '}'.
+moyaFTW = class id [extends id] ClassBody.
+ClassBody = lbrace [Vars] {Metodo} [Main] rbrace.
 
 Vars = {A}.
-A = Tipo B {',' B} ';'.
+A = Tipo B {comma B} scolon.
 A = DeclararObj.
-B = id ['=' Expresion].
+B = id [eq Expresion].
 
 Expresion = Expresion_Otr [(and | or) Expresion].
 
@@ -74,25 +82,32 @@ Var_cte = id | cte_i | cte_d | false | true | cte_char | cte_string | LlamarMeto
 Tipo = int | double | char | bool | string.
 
 Factor = D.
-D = '(' Expresion ')'.
+D = lparent Expresion rparent.
 D = [plus | minus | not] Var_cte.
 
-Ifs = if '(' Expresion ')' '{'{Estatuto}'}'
+If = if lparent Expresion rparent lbrace {Estatuto} rbrace [else lbrace {Estatuto} rbrace].
 
-Parvada = '['{Estatuto}']'.
-Estatuto = Copiar|Preguntar|Graznido|Juntar.
-Copiar = id'='Expresion';'.
-Graznido = quack'('(Expresion|cte_string){','(Expresion|cte_string)}')'';'.
-Expresion = Exp[('>'|'<'|"<>")Exp].
-Preguntar = si'('Expresion')'Parvada[sino Parvada]';'.
+While = while lparent Expresion rparent lbrace {Estatuto} rbrace.
 
-Var_cte = id|cte_i|cte_f.
+For = for lparent [For1] scolon Expresion scolon [For1] rparent lbrace {Estatuto} rbrace.  
+For1 = AsignarFor [comma For1].
 
-Exp = Termino[('+'|'-')Exp].
-Termino = Factor[('*'|'/')Termino].
+Asignar = id eq (Expresion | LlamarMetodo | Instanciar | Read) scolon.
+AsignarFor = id eq Expresion.
 
-Factor = ('('Expresion')')|(['+'|'-']Var_cte).
+LlamarMetodo = [id dot] id lparent Parametros rparent.
 
-Juntar = junta'('D','D';'.
-D = Var_cte|cte_string.
-END Patito2011.
+Estatuto = If | For | While | Asignar | LlamarMetodo | Print | DeclararObj.
+
+DeclararObj = id id [instanciar] scolon.
+
+Metodo = (void | Tipo) id lparent TipoParametros rparent lbrace [Vars] {Estatuto} return [Expresion] rbrace.
+TipoParametros = Tipo id [comma TipoParametros].
+
+Instanciar = eq new id lparent [Parametros] rparent.
+Parametros = Var_cte [comma Parametros].
+
+Print = write lparent Var_cte rparent scolon.
+Read = read lparent rparent.
+
+END moyaFTW.
