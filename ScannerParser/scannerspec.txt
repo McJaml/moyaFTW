@@ -95,4 +95,4 @@ Factor = ('('Expresion')')|(['+'|'-']Var_cte).
 
 Juntar = junta'('D','D';'.
 D = Var_cte|cte_string.
-END Patito2011.
+END moyaFTW.
