@@ -1,0 +1,53 @@
+COMPILER Patito2011
+
+CHARACTERS
+letter = 'A'..'Z' + 'a'..'z'.
+digit = '0'..'9'.
+anyButQuote = ANY - '\"'.
+
+TOKENS
+id = letter{letter|digit|'_'}.
+cte_i = digit{digit}.
+cte_string = '"'{anyButQuote}'"'.
+cte_f = {digit}'.'digit{digit}.
+plan = "plan".
+end = "end".
+int = "int".
+float = "float".
+si = "si".
+sino = "sino".
+junta = "junta".
+quack = "quack".
+variable = "variable".
+
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO '\n'
+
+IGNORE '\r' + '\n' + '\t'
+
+PRODUCTIONS
+Patito2011 = plan id';'[Vars]Parvada end.
+
+Vars = variable B C{B C}.
+B = id[','B].
+C = ':'Tipo';'.
+
+Tipo = int|float.
+
+Parvada = '['{Estatuto}']'.
+Estatuto = Copiar|Preguntar|Graznido|Juntar.
+Copiar = id'='Expresion';'.
+Graznido = quack'('(Expresion|cte_string){','(Expresion|cte_string)}')'';'.
+Expresion = Exp[('>'|'<'|"<>")Exp].
+Preguntar = si'('Expresion')'Parvada[sino Parvada]';'.
+
+Var_cte = id|cte_i|cte_f.
+
+Exp = Termino[('+'|'-')Exp].
+Termino = Factor[('*'|'/')Termino].
+
+Factor = ('('Expresion')')|(['+'|'-']Var_cte).
+
+Juntar = junta'('D','D';'.
+D = Var_cte|cte_string.
+END Patito2011.
