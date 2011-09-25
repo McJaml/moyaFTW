@@ -1,4 +1,4 @@
-COMPILER Patito2011
+COMPILER moyaFTW
 
 CHARACTERS
 letter = 'A'..'Z' + 'a'..'z'.
@@ -8,17 +8,43 @@ anyButQuote = ANY - '\"'.
 TOKENS
 id = letter{letter|digit|'_'}.
 cte_i = digit{digit}.
+cte_char = '\'' anyButQuote'\''.
 cte_string = '"'{anyButQuote}'"'.
-cte_f = {digit}'.'digit{digit}.
-plan = "plan".
-end = "end".
+cte_d = {digit}'.'digit{digit}.
 int = "int".
-float = "float".
-si = "si".
-sino = "sino".
-junta = "junta".
-quack = "quack".
-variable = "variable".
+char = "char".
+string = "string".
+if = "if".
+while = "while".
+bool = "bool".
+double = "double".
+extends = "extends".
+this = "this".
+else = "else".
+false = "false".
+true = "true".
+class = "class".
+for = "for".
+do = "do".
+void = "void".
+return = "return".
+new = "new".
+null = "null".
+super = "super".
+write = "write".
+and = "&&".
+or = "||".
+lt = "<".
+gt = ">".
+lte = "<=".
+gte = ">=".
+ne = "!=".
+eq = "==".
+plus = "+".
+minus = "-".
+times = "*".
+divide = "/".
+not = "!".
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO '\n'
@@ -26,13 +52,32 @@ COMMENTS FROM "//" TO '\n'
 IGNORE '\r' + '\n' + '\t'
 
 PRODUCTIONS
-Patito2011 = plan id';'[Vars]Parvada end.
+moyaFTW = class id [extends id] BodyClass.
+BodyClass = '{' [Vars] {Metodo} [Main] '}'.
 
-Vars = variable B C{B C}.
-B = id[','B].
-C = ':'Tipo';'.
+Vars = {A}.
+A = Tipo B {',' B} ';'.
+A = DeclararObj.
+B = id ['=' Expresion].
 
-Tipo = int|float.
+Expresion = Expresion_Otr [(and | or) Expresion].
+
+Expresion_Otr = Exp [C].
+C = Comparador Exp.
+Comparador = lt | gt | lte | gte | ne | eq.
+
+Exp = Termino [(plus | minus) Exp].
+Termino = Factor [ (times | divide) Termino].
+
+Var_cte = id | cte_i | cte_d | false | true | cte_char | cte_string | LlamarMetodo.
+
+Tipo = int | double | char | bool | string.
+
+Factor = D.
+D = '(' Expresion ')'.
+D = [plus | minus | not] Var_cte.
+
+Ifs = if '(' Expresion ')' '{'{Estatuto}'}'
 
 Parvada = '['{Estatuto}']'.
 Estatuto = Copiar|Preguntar|Graznido|Juntar.
