@@ -67,9 +67,9 @@ IGNORE '\r' + '\n' + '\t'
 PRODUCTIONS
 moyaFTW = ftw lbrace {Class} Main rbrace.
 Class = class id [extends id] ClassBody.
-ClassBody = lbrace [Vars] {Metodo} rbrace.
+ClassBody = lbrace Vars {Metodo} rbrace.
 
-Main = main lbrace [Vars] {Estatuto} rbrace.
+Main = main lbrace Vars {Estatuto} rbrace.
 
 Vars = {A}.
 A = (Tipo B scolon) | DeclararObj.
@@ -85,9 +85,9 @@ Comparador = lt | gt | lte | gte | ne | eq.
 Exp = Termino [(plus | minus) Exp].
 Termino = Factor [ (times | divide) Termino].
 
-Var_cte = C_id | cte_i | cte_d | false | true | cte_char | cte_string.
+Var_cte = (id C_id) | cte_i | cte_d | false | true | cte_char | cte_string.
 
-C_id = id {dot id} [F].
+C_id = {dot id} [F].
 F = Parametros | (lcorch Var_cte rcorch).
 
 Tipo = int | double | char | bool | string.
@@ -102,12 +102,12 @@ While = while lparent Expresion rparent lbrace {Estatuto} rbrace.
 For = for lparent [For1] scolon Expresion scolon [For1] rparent lbrace {Estatuto} rbrace.  
 For1 = C_id Asignar.
 
-Asignar = eq (Expresion | Var_cte | Instanciar | Read).
+AsignarLlamarDeclarar = id (AsignarLlamar | DeclararObj).
 AsignarLlamar = C_id [Asignar] scolon.
+Asignar = eq (Expresion | Instanciar | Read).
 
-Estatuto = If | For | While | AsignarLlamar | Print | DeclararObj.
-
-DeclararObj = id id [Instanciar] scolon.
+Estatuto = If | For | While | AsignarLlamarDeclarar | Print.
+DeclararObj = id [Instanciar] scolon.
 
 Metodo = (void | Tipo) id lparent TipoParametros rparent lbrace [Vars] {Estatuto} return [Expresion] rbrace.
 TipoParametros = Tipo id [comma TipoParametros].
