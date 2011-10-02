@@ -53,6 +53,8 @@ lbrace = "{".
 rbrace = "}".
 lparent = "(".
 rparent = ")".
+lcorch = "[".
+rcorch = "]".
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO '\n'
@@ -60,13 +62,16 @@ COMMENTS FROM "//" TO '\n'
 IGNORE '\r' + '\n' + '\t'
 
 PRODUCTIONS
-moyaFTW = class id [extends id] ClassBody.
+moyaFTW = ftw lbrace {Class}  Main rbrace.
+Class = class id [extends id] ClassBody.
 ClassBody = lbrace [Vars] {Metodo} [Main] rbrace.
 
 Vars = {A}.
-A = Tipo B {comma B} scolon.
+A = Tipo B scolon.
 A = DeclararObj.
-B = id [eq Expresion].
+B = id [E].
+E = eq Var_cte [comma B].
+E = lcorch rcorch [InstanciarList].
 
 Expresion = Expresion_Otr [(and | or) Expresion].
 
@@ -77,7 +82,11 @@ Comparador = lt | gt | lte | gte | ne | eq.
 Exp = Termino [(plus | minus) Exp].
 Termino = Factor [ (times | divide) Termino].
 
-Var_cte = id | cte_i | cte_d | false | true | cte_char | cte_string | LlamarMetodo.
+Var_cte = C_id | cte_i | cte_d | false | true | cte_char | cte_string.
+
+C_id = id {dot id} [F].
+F = Parametros.
+F = lcorch cte_i rcorch.
 
 Tipo = int | double | char | bool | string.
 
@@ -92,7 +101,7 @@ While = while lparent Expresion rparent lbrace {Estatuto} rbrace.
 For = for lparent [For1] scolon Expresion scolon [For1] rparent lbrace {Estatuto} rbrace.  
 For1 = AsignarFor [comma For1].
 
-Asignar = id eq (Expresion | LlamarMetodo | Instanciar | Read) scolon.
+Asignar = C_id eq (Expresion | Var_cte | Instanciar | InstanciarList | Read) scolon.
 AsignarFor = id eq Expresion.
 
 LlamarMetodo = [id dot] id lparent Parametros rparent.
