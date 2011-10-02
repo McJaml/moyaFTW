@@ -84,7 +84,7 @@ void Parser::Class() {
 void Parser::Main() {
 		Expect(27);
 		Expect(47);
-		if (StartOf(1)) {
+		while (StartOf(1)) {
 			Vars();
 		}
 		while (StartOf(2)) {
@@ -95,40 +95,37 @@ void Parser::Main() {
 
 void Parser::ClassBody() {
 		Expect(47);
-		if (StartOf(3)) {
+		while (StartOf(1)) {
 			Vars();
 		}
-		while (StartOf(4)) {
+		while (la->kind == 53) {
 			Metodo();
 		}
 		Expect(48);
 }
 
 void Parser::Vars() {
-		while (StartOf(5)) {
-			A();
-		}
+		A();
 }
 
 void Parser::Metodo() {
+		Expect(53);
 		if (la->kind == 21) {
 			Get();
-		} else if (StartOf(6)) {
+		} else if (StartOf(3)) {
 			Tipo();
-		} else SynErr(54);
+		} else SynErr(55);
 		Expect(1);
 		Expect(49);
 		TipoParametros();
 		Expect(50);
 		Expect(47);
-		if (StartOf(7)) {
-			Vars();
-		}
+		Vars();
 		while (StartOf(2)) {
 			Estatuto();
 		}
 		Expect(22);
-		if (StartOf(8)) {
+		if (StartOf(4)) {
 			Expresion();
 		}
 		Expect(48);
@@ -145,19 +142,17 @@ void Parser::Estatuto() {
 			AsignarLlamar();
 		} else if (la->kind == 26) {
 			Print();
-		} else if (la->kind == 1) {
-			DeclararObj();
-		} else SynErr(55);
+		} else SynErr(56);
 }
 
 void Parser::A() {
-		if (StartOf(6)) {
+		if (StartOf(3)) {
 			Tipo();
 			B();
 			Expect(44);
 		} else if (la->kind == 1) {
 			DeclararObj();
-		} else SynErr(56);
+		} else SynErr(57);
 }
 
 void Parser::Tipo() {
@@ -171,18 +166,17 @@ void Parser::Tipo() {
 			Get();
 		} else if (la->kind == 8) {
 			Get();
-		} else SynErr(57);
+		} else SynErr(58);
 }
 
 void Parser::B() {
 		Expect(1);
-		if (la->kind == 37 || la->kind == 45 || la->kind == 51) {
+		if (la->kind == 37 || la->kind == 51) {
 			E();
 		}
 }
 
 void Parser::DeclararObj() {
-		Expect(1);
 		Expect(1);
 		if (la->kind == 37) {
 			Instanciar();
@@ -191,11 +185,9 @@ void Parser::DeclararObj() {
 }
 
 void Parser::E() {
-		if (la->kind == 37 || la->kind == 44 || la->kind == 45) {
-			if (la->kind == 37) {
-				Get();
-				Var_cte();
-			}
+		if (la->kind == 37) {
+			Get();
+			Var_cte();
 			if (la->kind == 45) {
 				Get();
 				B();
@@ -203,16 +195,23 @@ void Parser::E() {
 		} else if (la->kind == 51) {
 			Get();
 			Expect(52);
-			if (StartOf(6)) {
+			if (StartOf(3)) {
 				InstanciarList();
 			}
-		} else SynErr(58);
+		} else SynErr(59);
 }
 
 void Parser::Var_cte() {
 		switch (la->kind) {
 		case 1: {
-			C_id();
+			Get();
+			while (la->kind == 46) {
+				Get();
+				Expect(1);
+			}
+			if (StartOf(5)) {
+				F();
+			}
 			break;
 		}
 		case 2: {
@@ -239,7 +238,7 @@ void Parser::Var_cte() {
 			Get();
 			break;
 		}
-		default: SynErr(59); break;
+		default: SynErr(60); break;
 		}
 }
 
@@ -264,7 +263,7 @@ void Parser::Expresion() {
 
 void Parser::Expresion_Otr() {
 		Exp();
-		if (StartOf(9)) {
+		if (StartOf(6)) {
 			C();
 		}
 }
@@ -312,7 +311,7 @@ void Parser::Comparador() {
 			Get();
 			break;
 		}
-		default: SynErr(60); break;
+		default: SynErr(61); break;
 		}
 }
 
@@ -332,32 +331,21 @@ void Parser::Factor() {
 		D();
 }
 
-void Parser::C_id() {
-		Expect(1);
-		while (la->kind == 46) {
-			Get();
-			Expect(1);
-		}
-		if (StartOf(10)) {
-			F();
-		}
-}
-
 void Parser::F() {
-		if (StartOf(8)) {
+		if (StartOf(4)) {
 			Parametros();
 		} else if (la->kind == 51) {
 			Get();
 			Var_cte();
 			Expect(52);
-		} else SynErr(61);
+		} else SynErr(62);
 }
 
 void Parser::Parametros() {
 		Exp();
 		if (la->kind == 45) {
 			Get();
-			Parametros();
+			Exp();
 		}
 }
 
@@ -366,7 +354,7 @@ void Parser::D() {
 			Get();
 			Expresion();
 			Expect(50);
-		} else if (StartOf(11)) {
+		} else if (StartOf(7)) {
 			if (la->kind == 39 || la->kind == 40 || la->kind == 43) {
 				if (la->kind == 39) {
 					Get();
@@ -377,7 +365,7 @@ void Parser::D() {
 				}
 			}
 			Var_cte();
-		} else SynErr(62);
+		} else SynErr(63);
 }
 
 void Parser::If() {
@@ -433,21 +421,41 @@ void Parser::For() {
 }
 
 void Parser::For1() {
-		C_id();
+		Expect(1);
+		while (la->kind == 46) {
+			Get();
+			Expect(1);
+		}
+		if (StartOf(5)) {
+			F();
+		}
 		Asignar();
 }
 
 void Parser::Asignar() {
 		Expect(37);
-		if (StartOf(8)) {
+		if (StartOf(4)) {
 			Expresion();
-		} else if (StartOf(12)) {
-			Var_cte();
 		} else if (la->kind == 37) {
 			Instanciar();
 		} else if (la->kind == 29) {
 			Read();
-		} else SynErr(63);
+		} else SynErr(64);
+}
+
+void Parser::AsignarLlamar() {
+		Expect(1);
+		while (la->kind == 46) {
+			Get();
+			Expect(1);
+		}
+		if (StartOf(5)) {
+			F();
+		}
+		if (la->kind == 37) {
+			Asignar();
+		}
+		Expect(44);
 }
 
 void Parser::Instanciar() {
@@ -455,23 +463,15 @@ void Parser::Instanciar() {
 		Expect(23);
 		if (la->kind == 1) {
 			InstanciarObj();
-		} else if (StartOf(6)) {
+		} else if (StartOf(3)) {
 			InstanciarList();
-		} else SynErr(64);
+		} else SynErr(65);
 }
 
 void Parser::Read() {
 		Expect(29);
 		Expect(49);
 		Expect(50);
-}
-
-void Parser::AsignarLlamar() {
-		C_id();
-		if (la->kind == 37) {
-			Asignar();
-		}
-		Expect(44);
 }
 
 void Parser::Print() {
@@ -494,7 +494,7 @@ void Parser::TipoParametros() {
 void Parser::InstanciarObj() {
 		Expect(1);
 		Expect(49);
-		if (StartOf(8)) {
+		if (StartOf(4)) {
 			Parametros();
 		}
 		Expect(50);
@@ -601,7 +601,7 @@ void Parser::Parse() {
 }
 
 Parser::Parser(Scanner *scanner) {
-	maxT = 53;
+	maxT = 54;
 
 	ParserInitCaller<Parser>::CallInit(this);
 	dummyToken = NULL;
@@ -616,20 +616,15 @@ bool Parser::StartOf(int s) {
 	const bool T = true;
 	const bool x = false;
 
-	static bool set[13][55] = {
-		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,T,T, T,T,T,T, T,x,x,x, x,x,x,T, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x},
-		{x,T,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x},
-		{x,x,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,T,T, T,T,T,T, T,x,x,x, x,x,x,T, x,x,T,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,T, x,x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x}
+	static bool set[8][56] = {
+		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,x,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,x, x,x,x,x},
+		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,T, x,x,x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
+		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,x,x,x, x,x,x,x}
 	};
 
 
@@ -703,18 +698,19 @@ void Errors::SynErr(int line, int col, int n) {
 			case 50: s = coco_string_create(L"rparent expected"); break;
 			case 51: s = coco_string_create(L"lcorch expected"); break;
 			case 52: s = coco_string_create(L"rcorch expected"); break;
-			case 53: s = coco_string_create(L"??? expected"); break;
-			case 54: s = coco_string_create(L"invalid Metodo"); break;
-			case 55: s = coco_string_create(L"invalid Estatuto"); break;
-			case 56: s = coco_string_create(L"invalid A"); break;
-			case 57: s = coco_string_create(L"invalid Tipo"); break;
-			case 58: s = coco_string_create(L"invalid E"); break;
-			case 59: s = coco_string_create(L"invalid Var_cte"); break;
-			case 60: s = coco_string_create(L"invalid Comparador"); break;
-			case 61: s = coco_string_create(L"invalid F"); break;
-			case 62: s = coco_string_create(L"invalid D"); break;
-			case 63: s = coco_string_create(L"invalid Asignar"); break;
-			case 64: s = coco_string_create(L"invalid Instanciar"); break;
+			case 53: s = coco_string_create(L"function expected"); break;
+			case 54: s = coco_string_create(L"??? expected"); break;
+			case 55: s = coco_string_create(L"invalid Metodo"); break;
+			case 56: s = coco_string_create(L"invalid Estatuto"); break;
+			case 57: s = coco_string_create(L"invalid A"); break;
+			case 58: s = coco_string_create(L"invalid Tipo"); break;
+			case 59: s = coco_string_create(L"invalid E"); break;
+			case 60: s = coco_string_create(L"invalid Var_cte"); break;
+			case 61: s = coco_string_create(L"invalid Comparador"); break;
+			case 62: s = coco_string_create(L"invalid F"); break;
+			case 63: s = coco_string_create(L"invalid D"); break;
+			case 64: s = coco_string_create(L"invalid Asignar"); break;
+			case 65: s = coco_string_create(L"invalid Instanciar"); break;
 
 		default:
 		{

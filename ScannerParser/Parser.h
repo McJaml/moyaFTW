@@ -77,7 +77,8 @@ private:
 		_lparent=49,
 		_rparent=50,
 		_lcorch=51,
-		_rcorch=52
+		_rcorch=52,
+		_function=53
 	};
 	int maxT;
 

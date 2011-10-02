@@ -58,6 +58,7 @@ lparent = "(".
 rparent = ")".
 lcorch = "[".
 rcorch = "]".
+function = "function".
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO '\n'
@@ -107,7 +108,7 @@ Asignar = eq (Expresion | Instanciar | Read).
 Estatuto = If | For | While | AsignarLlamar | Print.
 DeclararObj = id [Instanciar] scolon.
 
-Metodo = (void | Tipo) id lparent TipoParametros rparent lbrace Vars {Estatuto} return [Expresion] rbrace.
+Metodo = function (void | Tipo) id lparent TipoParametros rparent lbrace Vars {Estatuto} return [Expresion] rbrace.
 TipoParametros = Tipo id [comma TipoParametros].
 
 Instanciar = eq new (InstanciarObj | InstanciarList).

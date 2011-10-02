@@ -1,0 +1,35 @@
+ftw
+{
+	class Person
+	{
+		string name;
+		string lastName = "ok";
+		int age = 22;
+		
+		function int getAge()
+		{
+			int a = 5;
+			
+		}
+		
+		function void setAge(int a)
+		{
+			age = a;
+		}
+	}
+	
+	class Address
+	{
+		string street = "calle";
+		int number = 45;
+		string country = "Mexico";
+		int zipCode = 12345;
+	}
+	main
+	{
+		int n = 5;
+		Person p = new Person();
+		Address a = new Address();
+		p.name = "prueba";
+	}
+}
