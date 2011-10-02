@@ -113,7 +113,7 @@ TipoParametros = Tipo id [comma TipoParametros].
 Instanciar = eq new (InstanciarObj | InstanciarList).
 InstanciarObj = id lparent [Parametros] rparent.
 InstanciarList = Tipo lcorch Var_cte rcorch.
-Parametros = Exp [comma Parametros].
+Parametros = Exp [comma Exp].
 
 Print = write lparent Exp rparent scolon.
 Read = read lparent rparent.

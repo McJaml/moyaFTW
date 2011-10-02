@@ -344,7 +344,7 @@ void Parser::Parametros() {
 		Exp();
 		if (la->kind == 45) {
 			Get();
-			Parametros();
+			Exp();
 		}
 }
 
