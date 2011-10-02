@@ -77,7 +77,8 @@ private:
 		_lparent=49,
 		_rparent=50,
 		_lcorch=51,
-		_rcorch=52
+		_rcorch=52,
+		_function=53
 	};
 	int maxT;
 
@@ -126,7 +127,6 @@ public:
 	void Comparador();
 	void Termino();
 	void Factor();
-	void C_id();
 	void F();
 	void Parametros();
 	void D();
@@ -135,9 +135,9 @@ public:
 	void For();
 	void For1();
 	void Asignar();
+	void AsignarLlamar();
 	void Instanciar();
 	void Read();
-	void AsignarLlamar();
 	void Print();
 	void TipoParametros();
 	void InstanciarObj();
