@@ -138,7 +138,7 @@ void Parser::Estatuto() {
 		} else if (la->kind == 10) {
 			While();
 		} else if (la->kind == 1) {
-			AsignarLlamarDeclarar();
+			AsignarLlamar();
 		} else if (la->kind == 26) {
 			Print();
 		} else SynErr(55);
@@ -442,23 +442,15 @@ void Parser::Asignar() {
 		} else SynErr(63);
 }
 
-void Parser::AsignarLlamarDeclarar() {
-		Expect(1);
-		if (StartOf(9)) {
-			while (la->kind == 46) {
-				Get();
-				Expect(1);
-			}
-			if (StartOf(6)) {
-				F();
-			}
-			AsignarLlamar();
-		} else if (la->kind == 1) {
-			DeclararObj();
-		} else SynErr(64);
-}
-
 void Parser::AsignarLlamar() {
+		Expect(1);
+		while (la->kind == 46) {
+			Get();
+			Expect(1);
+		}
+		if (StartOf(6)) {
+			F();
+		}
 		if (la->kind == 37) {
 			Asignar();
 		}
@@ -472,7 +464,7 @@ void Parser::Instanciar() {
 			InstanciarObj();
 		} else if (StartOf(4)) {
 			InstanciarList();
-		} else SynErr(65);
+		} else SynErr(64);
 }
 
 void Parser::Read() {
@@ -623,7 +615,7 @@ bool Parser::StartOf(int s) {
 	const bool T = true;
 	const bool x = false;
 
-	static bool set[10][55] = {
+	static bool set[9][55] = {
 		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,T,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,T,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
@@ -632,8 +624,7 @@ bool Parser::StartOf(int s) {
 		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,x, x,x,x},
 		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,T, x,x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,x,x,T, T,x,T,x, x,T,x,T, x,x,x}
+		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,x,x,x, x,x,x}
 	};
 
 
@@ -718,8 +709,7 @@ void Errors::SynErr(int line, int col, int n) {
 			case 61: s = coco_string_create(L"invalid F"); break;
 			case 62: s = coco_string_create(L"invalid D"); break;
 			case 63: s = coco_string_create(L"invalid Asignar"); break;
-			case 64: s = coco_string_create(L"invalid AsignarLlamarDeclarar"); break;
-			case 65: s = coco_string_create(L"invalid Instanciar"); break;
+			case 64: s = coco_string_create(L"invalid Instanciar"); break;
 
 		default:
 		{

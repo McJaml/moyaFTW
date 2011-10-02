@@ -134,7 +134,6 @@ public:
 	void For();
 	void For1();
 	void Asignar();
-	void AsignarLlamarDeclarar();
 	void AsignarLlamar();
 	void Instanciar();
 	void Read();
