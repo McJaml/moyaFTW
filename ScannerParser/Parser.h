@@ -138,6 +138,7 @@ public:
 	void Instanciar();
 	void Read();
 	void AsignarLlamar();
+	void AsignarLlamarDeclarar();
 	void Print();
 	void TipoParametros();
 	void InstanciarObj();
