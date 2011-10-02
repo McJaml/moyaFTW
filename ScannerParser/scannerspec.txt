@@ -32,6 +32,9 @@ new = "new".
 null = "null".
 super = "super".
 write = "write".
+main = "main".
+ftw = "ftw".
+read = "read".
 and = "&&".
 or = "||".
 lt = "<".
@@ -62,16 +65,16 @@ COMMENTS FROM "//" TO '\n'
 IGNORE '\r' + '\n' + '\t'
 
 PRODUCTIONS
-moyaFTW = ftw lbrace {Class}  Main rbrace.
+moyaFTW = ftw lbrace {Class} Main rbrace.
 Class = class id [extends id] ClassBody.
-ClassBody = lbrace [Vars] {Metodo} [Main] rbrace.
+ClassBody = lbrace [Vars] {Metodo} rbrace.
+
+Main = main lbrace [Vars] {Estatuto} rbrace.
 
 Vars = {A}.
-A = Tipo B scolon.
-A = DeclararObj.
+A = (Tipo B scolon) | DeclararObj.
 B = id [E].
-E = eq Var_cte [comma B].
-E = lcorch rcorch [InstanciarList].
+E = ([eq Var_cte] [comma B]) | (lcorch rcorch [InstanciarList]).
 
 Expresion = Expresion_Otr [(and | or) Expresion].
 
@@ -85,38 +88,36 @@ Termino = Factor [ (times | divide) Termino].
 Var_cte = C_id | cte_i | cte_d | false | true | cte_char | cte_string.
 
 C_id = id {dot id} [F].
-F = Parametros.
-F = lcorch cte_i rcorch.
+F = Parametros | (lcorch Var_cte rcorch).
 
 Tipo = int | double | char | bool | string.
 
 Factor = D.
-D = lparent Expresion rparent.
-D = [plus | minus | not] Var_cte.
+D = (lparent Expresion rparent) | ([plus | minus | not] Var_cte).
 
 If = if lparent Expresion rparent lbrace {Estatuto} rbrace [else lbrace {Estatuto} rbrace].
 
 While = while lparent Expresion rparent lbrace {Estatuto} rbrace.
 
 For = for lparent [For1] scolon Expresion scolon [For1] rparent lbrace {Estatuto} rbrace.  
-For1 = AsignarFor [comma For1].
+For1 = C_id Asignar.
 
-Asignar = C_id eq (Expresion | Var_cte | Instanciar | InstanciarList | Read) scolon.
-AsignarFor = id eq Expresion.
+Asignar = eq (Expresion | Var_cte | Instanciar | Read).
+AsignarLlamar = C_id [Asignar] scolon.
 
-LlamarMetodo = [id dot] id lparent Parametros rparent.
+Estatuto = If | For | While | AsignarLlamar | Print | DeclararObj.
 
-Estatuto = If | For | While | Asignar | LlamarMetodo | Print | DeclararObj.
-
-DeclararObj = id id [instanciar] scolon.
+DeclararObj = id id [Instanciar] scolon.
 
 Metodo = (void | Tipo) id lparent TipoParametros rparent lbrace [Vars] {Estatuto} return [Expresion] rbrace.
 TipoParametros = Tipo id [comma TipoParametros].
 
-Instanciar = eq new id lparent [Parametros] rparent.
-Parametros = Var_cte [comma Parametros].
+Instanciar = eq new (InstanciarObj | InstanciarList).
+InstanciarObj = id lparent [Parametros] rparent.
+InstanciarList = Tipo lcorch Var_cte rcorch.
+Parametros = Exp [comma Parametros].
 
-Print = write lparent Var_cte rparent scolon.
+Print = write lparent Exp rparent scolon.
 Read = read lparent rparent.
 
 END moyaFTW.
