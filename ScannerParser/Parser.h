@@ -126,7 +126,6 @@ public:
 	void Comparador();
 	void Termino();
 	void Factor();
-	void C_id();
 	void F();
 	void Parametros();
 	void D();
@@ -135,10 +134,10 @@ public:
 	void For();
 	void For1();
 	void Asignar();
+	void AsignarLlamarDeclarar();
+	void AsignarLlamar();
 	void Instanciar();
 	void Read();
-	void AsignarLlamar();
-	void AsignarLlamarDeclarar();
 	void Print();
 	void TipoParametros();
 	void InstanciarObj();

@@ -84,8 +84,10 @@ void Parser::Class() {
 void Parser::Main() {
 		Expect(27);
 		Expect(47);
-		Vars();
 		while (StartOf(1)) {
+			Vars();
+		}
+		while (StartOf(2)) {
 			Estatuto();
 		}
 		Expect(48);
@@ -93,17 +95,17 @@ void Parser::Main() {
 
 void Parser::ClassBody() {
 		Expect(47);
-		Vars();
-		while (StartOf(2)) {
+		while (StartOf(1)) {
+			Vars();
+		}
+		while (StartOf(3)) {
 			Metodo();
 		}
 		Expect(48);
 }
 
 void Parser::Vars() {
-		while (StartOf(3)) {
-			A();
-		}
+		A();
 }
 
 void Parser::Metodo() {
@@ -117,14 +119,12 @@ void Parser::Metodo() {
 		TipoParametros();
 		Expect(50);
 		Expect(47);
-		if (StartOf(5)) {
-			Vars();
-		}
-		while (StartOf(1)) {
+		Vars();
+		while (StartOf(2)) {
 			Estatuto();
 		}
 		Expect(22);
-		if (StartOf(6)) {
+		if (StartOf(5)) {
 			Expresion();
 		}
 		Expect(48);
@@ -170,7 +170,7 @@ void Parser::Tipo() {
 
 void Parser::B() {
 		Expect(1);
-		if (la->kind == 37 || la->kind == 45 || la->kind == 51) {
+		if (la->kind == 37 || la->kind == 51) {
 			E();
 		}
 }
@@ -184,11 +184,9 @@ void Parser::DeclararObj() {
 }
 
 void Parser::E() {
-		if (la->kind == 37 || la->kind == 44 || la->kind == 45) {
-			if (la->kind == 37) {
-				Get();
-				Var_cte();
-			}
+		if (la->kind == 37) {
+			Get();
+			Var_cte();
 			if (la->kind == 45) {
 				Get();
 				B();
@@ -206,7 +204,13 @@ void Parser::Var_cte() {
 		switch (la->kind) {
 		case 1: {
 			Get();
-			C_id();
+			while (la->kind == 46) {
+				Get();
+				Expect(1);
+			}
+			if (StartOf(6)) {
+				F();
+			}
 			break;
 		}
 		case 2: {
@@ -326,18 +330,8 @@ void Parser::Factor() {
 		D();
 }
 
-void Parser::C_id() {
-		while (la->kind == 46) {
-			Get();
-			Expect(1);
-		}
-		if (StartOf(8)) {
-			F();
-		}
-}
-
 void Parser::F() {
-		if (StartOf(6)) {
+		if (StartOf(5)) {
 			Parametros();
 		} else if (la->kind == 51) {
 			Get();
@@ -359,7 +353,7 @@ void Parser::D() {
 			Get();
 			Expresion();
 			Expect(50);
-		} else if (StartOf(9)) {
+		} else if (StartOf(8)) {
 			if (la->kind == 39 || la->kind == 40 || la->kind == 43) {
 				if (la->kind == 39) {
 					Get();
@@ -379,14 +373,14 @@ void Parser::If() {
 		Expresion();
 		Expect(50);
 		Expect(47);
-		while (StartOf(1)) {
+		while (StartOf(2)) {
 			Estatuto();
 		}
 		Expect(48);
 		if (la->kind == 15) {
 			Get();
 			Expect(47);
-			while (StartOf(1)) {
+			while (StartOf(2)) {
 				Estatuto();
 			}
 			Expect(48);
@@ -399,7 +393,7 @@ void Parser::While() {
 		Expresion();
 		Expect(50);
 		Expect(47);
-		while (StartOf(1)) {
+		while (StartOf(2)) {
 			Estatuto();
 		}
 		Expect(48);
@@ -408,37 +402,67 @@ void Parser::While() {
 void Parser::For() {
 		Expect(19);
 		Expect(49);
-		if (StartOf(10)) {
+		if (la->kind == 1) {
 			For1();
 		}
 		Expect(44);
 		Expresion();
 		Expect(44);
-		if (StartOf(10)) {
+		if (la->kind == 1) {
 			For1();
 		}
 		Expect(50);
 		Expect(47);
-		while (StartOf(1)) {
+		while (StartOf(2)) {
 			Estatuto();
 		}
 		Expect(48);
 }
 
 void Parser::For1() {
-		C_id();
+		Expect(1);
+		while (la->kind == 46) {
+			Get();
+			Expect(1);
+		}
+		if (StartOf(6)) {
+			F();
+		}
 		Asignar();
 }
 
 void Parser::Asignar() {
 		Expect(37);
-		if (StartOf(6)) {
+		if (StartOf(5)) {
 			Expresion();
 		} else if (la->kind == 37) {
 			Instanciar();
 		} else if (la->kind == 29) {
 			Read();
 		} else SynErr(63);
+}
+
+void Parser::AsignarLlamarDeclarar() {
+		Expect(1);
+		if (StartOf(9)) {
+			while (la->kind == 46) {
+				Get();
+				Expect(1);
+			}
+			if (StartOf(6)) {
+				F();
+			}
+			AsignarLlamar();
+		} else if (la->kind == 1) {
+			DeclararObj();
+		} else SynErr(64);
+}
+
+void Parser::AsignarLlamar() {
+		if (la->kind == 37) {
+			Asignar();
+		}
+		Expect(44);
 }
 
 void Parser::Instanciar() {
@@ -448,30 +472,13 @@ void Parser::Instanciar() {
 			InstanciarObj();
 		} else if (StartOf(4)) {
 			InstanciarList();
-		} else SynErr(64);
+		} else SynErr(65);
 }
 
 void Parser::Read() {
 		Expect(29);
 		Expect(49);
 		Expect(50);
-}
-
-void Parser::AsignarLlamar() {
-		C_id();
-		if (la->kind == 37) {
-			Asignar();
-		}
-		Expect(44);
-}
-
-void Parser::AsignarLlamarDeclarar() {
-		Expect(1);
-		if (StartOf(11)) {
-			AsignarLlamar();
-		} else if (la->kind == 1) {
-			DeclararObj();
-		} else SynErr(65);
 }
 
 void Parser::Print() {
@@ -494,7 +501,7 @@ void Parser::TipoParametros() {
 void Parser::InstanciarObj() {
 		Expect(1);
 		Expect(49);
-		if (StartOf(6)) {
+		if (StartOf(5)) {
 			Parametros();
 		}
 		Expect(50);
@@ -616,18 +623,16 @@ bool Parser::StartOf(int s) {
 	const bool T = true;
 	const bool x = false;
 
-	static bool set[12][55] = {
+	static bool set[10][55] = {
 		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		{x,T,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,T,x,x, x,x,x,x, x,T,T,x, x,x,x,x, x,x,x,T, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,x,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,x,x,x, x,x,T,T, T,x,x,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,x,x, x,x,T,T, T,T,T,T, T,x,x,x, x,x,x,T, x,x,T,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,T,x,T, x,x,x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
 		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,x,x,T, x,x,x,x, x,x,x,x, x,x,x},
-		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,x,x,T, x,x,T,x, x,T,x,T, x,x,x},
 		{x,T,T,T, T,T,x,x, x,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,T, T,x,x,T, T,x,T,x, x,T,x,T, x,x,x}
 	};
 
@@ -713,8 +718,8 @@ void Errors::SynErr(int line, int col, int n) {
 			case 61: s = coco_string_create(L"invalid F"); break;
 			case 62: s = coco_string_create(L"invalid D"); break;
 			case 63: s = coco_string_create(L"invalid Asignar"); break;
-			case 64: s = coco_string_create(L"invalid Instanciar"); break;
-			case 65: s = coco_string_create(L"invalid AsignarLlamarDeclarar"); break;
+			case 64: s = coco_string_create(L"invalid AsignarLlamarDeclarar"); break;
+			case 65: s = coco_string_create(L"invalid Instanciar"); break;
 
 		default:
 		{
