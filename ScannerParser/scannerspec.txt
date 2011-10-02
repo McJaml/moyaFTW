@@ -98,15 +98,14 @@ If = if lparent Expresion rparent lbrace {Estatuto} rbrace [else lbrace {Estatut
 
 While = while lparent Expresion rparent lbrace {Estatuto} rbrace.
 
-For = for lparent [For1] scolon Expresion scolon [For1] rparent lbrace {Estatuto} rbrace.  
+For = for lparent (For1 | scolon) Expresion scolon [For1] rparent lbrace {Estatuto} rbrace.  
 For1 = id {dot id} [F] Asignar.
 
-AsignarLlamarDeclarar = id ({dot id} [F] AsignarLlamar | DeclararObj).
-AsignarLlamar = [Asignar] scolon.
+AsignarLlamar = id {dot id} [F] [Asignar] scolon.
 Asignar = eq (Expresion | Instanciar | Read).
 
-Estatuto = If | For | While | AsignarLlamarDeclarar | Print.
-DeclararObj = id [Instanciar] scolon.
+Estatuto = If | For | While | AsignarLlamar | Print.
+DeclararObj = id id [Instanciar] scolon.
 
 Metodo = (void | Tipo) id lparent TipoParametros rparent lbrace Vars {Estatuto} return [Expresion] rbrace.
 TipoParametros = Tipo id [comma TipoParametros].
@@ -114,7 +113,7 @@ TipoParametros = Tipo id [comma TipoParametros].
 Instanciar = eq new (InstanciarObj | InstanciarList).
 InstanciarObj = id lparent [Parametros] rparent.
 InstanciarList = Tipo lcorch Var_cte rcorch.
-Parametros = Exp [comma Parametros].
+Parametros = Exp {comma Exp}.
 
 Print = write lparent Exp rparent scolon.
 Read = read lparent rparent.
