@@ -177,7 +177,6 @@ void Parser::B() {
 
 void Parser::DeclararObj() {
 		Expect(1);
-		Expect(1);
 		if (la->kind == 37) {
 			Instanciar();
 		}
@@ -343,9 +342,9 @@ void Parser::F() {
 
 void Parser::Parametros() {
 		Exp();
-		while (la->kind == 45) {
+		if (la->kind == 45) {
 			Get();
-			Exp();
+			Parametros();
 		}
 }
 
@@ -405,9 +404,8 @@ void Parser::For() {
 		Expect(49);
 		if (la->kind == 1) {
 			For1();
-		} else if (la->kind == 44) {
-			Get();
-		} else SynErr(63);
+		}
+		Expect(44);
 		Expresion();
 		Expect(44);
 		if (la->kind == 1) {
@@ -441,7 +439,7 @@ void Parser::Asignar() {
 			Instanciar();
 		} else if (la->kind == 29) {
 			Read();
-		} else SynErr(64);
+		} else SynErr(63);
 }
 
 void Parser::AsignarLlamar() {
@@ -466,7 +464,7 @@ void Parser::Instanciar() {
 			InstanciarObj();
 		} else if (StartOf(4)) {
 			InstanciarList();
-		} else SynErr(65);
+		} else SynErr(64);
 }
 
 void Parser::Read() {
@@ -710,9 +708,8 @@ void Errors::SynErr(int line, int col, int n) {
 			case 60: s = coco_string_create(L"invalid Comparador"); break;
 			case 61: s = coco_string_create(L"invalid F"); break;
 			case 62: s = coco_string_create(L"invalid D"); break;
-			case 63: s = coco_string_create(L"invalid For"); break;
-			case 64: s = coco_string_create(L"invalid Asignar"); break;
-			case 65: s = coco_string_create(L"invalid Instanciar"); break;
+			case 63: s = coco_string_create(L"invalid Asignar"); break;
+			case 64: s = coco_string_create(L"invalid Instanciar"); break;
 
 		default:
 		{
