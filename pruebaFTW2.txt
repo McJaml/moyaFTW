@@ -5,12 +5,12 @@ ftw
 		int x = 1, t = 2;
 		string r = "asdasd";
 		
-		void SetAge(int age)
+		function void SetAge(int age)
 		{
 			x = age;
 		}
 		
-		int GetAge()
+		function int GetAge()
 		{
 			return x;
 		}
@@ -21,7 +21,7 @@ ftw
 		int numeroEmpleado = 1;
 		string password = "asdaad";
 		
-		void setNumeroEmpleado(int numero, int numeroPrevio)
+		function void setNumeroEmpleado(int numero, int numeroPrevio)
 		{
 			if (numeroPrevio == numeroEmpleado)
 			{

@@ -113,7 +113,6 @@ public:
 	void Vars();
 	void Metodo();
 	void Estatuto();
-	void A();
 	void Tipo();
 	void B();
 	void DeclararObj();
@@ -123,13 +122,11 @@ public:
 	void Expresion();
 	void Expresion_Otr();
 	void Exp();
-	void C();
 	void Comparador();
 	void Termino();
 	void Factor();
 	void F();
 	void Parametros();
-	void D();
 	void If();
 	void While();
 	void For();

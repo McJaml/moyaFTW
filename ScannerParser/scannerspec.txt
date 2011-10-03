@@ -72,28 +72,25 @@ ClassBody = lbrace {Vars} {Metodo} rbrace.
 
 Main = main lbrace {Vars} {Estatuto} rbrace.
 
-Vars = A.
-A = (Tipo B scolon) | DeclararObj.
+Vars = (Tipo B scolon) | DeclararObj.
 B = id [E].
 E = (eq Var_cte [comma B]) | (lcorch rcorch [InstanciarList]).
 
-Expresion = Expresion_Otr [(and | or) Expresion].
+Expresion = Expresion_Otr {(and | or) Expresion_Otr}.
 
-Expresion_Otr = Exp [C].
-C = Comparador Exp.
-Comparador = lt | gt | lte | gte | ne | eq.
+Expresion_Otr = Exp {Comparador Exp}.
+Comparador = lt | gt | lte | gte | ne | ee.
 
-Exp = Termino [(plus | minus) Exp].
-Termino = Factor [ (times | divide) Termino].
+Exp = Termino {(plus | minus) Termino}.
+Termino = Factor {(times | divide) Factor}.
 
-Var_cte = (id {dot id} [F]) | cte_i | cte_d | false | true | cte_char | cte_string.
+Var_cte = (id {dot id} [F] ) | cte_i | cte_d | false | true | cte_char | cte_string.
 
-F = Parametros | (lcorch Var_cte rcorch).
+F = (lparent Parametros rparent) | (lcorch Var_cte rcorch).
 
 Tipo = int | double | char | bool | string.
 
-Factor = D.
-D = (lparent Expresion rparent) | ([plus | minus | not] Var_cte).
+Factor = (lparent Expresion rparent) | ([plus | minus | not] Var_cte).
 
 If = if lparent Expresion rparent lbrace {Estatuto} rbrace [else lbrace {Estatuto} rbrace].
 
@@ -106,17 +103,17 @@ AsignarLlamar = id {dot id} [F] [Asignar] scolon.
 Asignar = eq (Expresion | Instanciar | Read).
 
 Estatuto = If | For | While | AsignarLlamar | Print.
-DeclararObj = id [Instanciar] scolon.
+DeclararObj = id id [Instanciar] scolon.
 
-Metodo = function (void | Tipo) id lparent TipoParametros rparent lbrace Vars {Estatuto} return [Expresion] rbrace.
-TipoParametros = Tipo id [comma TipoParametros].
+Metodo = function (void | Tipo | id) id lparent [TipoParametros] rparent lbrace {Vars} {Estatuto} return [Expresion] scolon rbrace.
+TipoParametros = Tipo id {comma Tipo id}.
 
 Instanciar = eq new (InstanciarObj | InstanciarList).
 InstanciarObj = id lparent [Parametros] rparent.
 InstanciarList = Tipo lcorch Var_cte rcorch.
-Parametros = Exp [comma Exp].
+Parametros = Expresion {comma Expresion}.
 
-Print = write lparent Exp rparent scolon.
+Print = write lparent Expresion rparent scolon.
 Read = read lparent rparent.
 
 END moyaFTW.
