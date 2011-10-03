@@ -1,0 +1,59 @@
+ftw
+{
+	class Persona
+	{
+		int x = 1, t = 2;
+		string r = "asdasd";
+		
+		function void SetAge(int age)
+		{
+			x = age;
+		}
+		
+		function int GetAge()
+		{
+			return x;
+		}
+	}
+	
+	class Empleado extends Persona
+	{
+		int numeroEmpleado = 1;
+		string password = "asdaad";
+		
+		function void setNumeroEmpleado(int numero, int numeroPrevio)
+		{
+			if (numeroPrevio == numeroEmpleado)
+			{
+				numeroEmpleado = numero;
+			}
+		}
+	}
+	
+	class Foo
+	{
+	
+	}
+	
+	main 
+	{
+		double fgfg = 1.2323;
+		int index = 100;
+		Empleado e = new Empleado();
+		while (index > 0)
+		{
+			if (index / 2 == 1)
+			{
+				index = index + 100;
+				index = 3 * 1337 * ( 1 - 1);
+			}
+			else			
+			{
+				for ( index = 1543; index > 2; i = i + 2)
+				{
+					e.SetNumeroEmpleado(index, index + 1);
+				}
+			}
+		}
+	}
+}
